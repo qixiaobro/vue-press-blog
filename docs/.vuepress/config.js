@@ -27,26 +27,26 @@ module.exports = {
                 text: '分类', //默认显示        
                 ariaLabel: '分类', //用于识别的label
                 items: [{
-                        text: 'ES6',
-                        link: '/pages/JS/解构赋值.md'
-                    },
-                    //点击标签会跳转至link的markdown文件生成的页面
-                    {
-                        text: 'Vue.js',
-                        link: '/pages/JS/外部点击事件.md'
-                    },
-                    {
-                        text: 'React',
-                        link: '/pages/JS/Redux.md'
-                    },
-                    {
-                        text: '技术总结',
-                        link: '/pages/JS/blobDownload.md'
-                    },
-                    {
-                        text: '通用方法封装',
-                        link: '/pages/JS/tool.md'
-                    },
+                    text: 'ES6',
+                    link: '/pages/JS/解构赋值.md'
+                },
+                //点击标签会跳转至link的markdown文件生成的页面
+                {
+                    text: 'Vue.js',
+                    link: '/pages/JS/外部点击事件.md'
+                },
+                {
+                    text: 'React',
+                    link: '/pages/JS/Redux.md'
+                },
+                {
+                    text: '技术总结',
+                    link: '/pages/JS/blobDownload.md'
+                },
+                {
+                    text: '通用方法封装',
+                    link: '/pages/JS/tool.md'
+                },
 
 
                 ]
@@ -60,54 +60,62 @@ module.exports = {
         ],
         sidebar: {
             '/pages/JS/': [{
-                    title: 'ES6', // 一级菜单名称
-                    collapsable: true, // false为默认展开菜单, 默认值true是折叠,
-                    children: [
-                        ['解构赋值.md', '解构赋值'], //菜单名称为'子菜单1'，跳转至/pages/folder1/test1.md
-                        ['数值的扩展.md', '数值的扩展'],
-                        ['数组的扩展.md', '数组的扩展'],
-                        ['对象的扩展.md', '对象的扩展'],
-                        ['对象的新增方法.md', '对象的新增方法'],
-                        ['函数的扩展.md', '函数的扩展'],
-                        ['字符串的扩展.md', '字符串的扩展'],
-                        ['字符串的新增方法.md', '字符串的新增方法'],
-                        ['async.md', 'async'],
-                        ['Promise.md', 'Promise'],
-                        ['Proxy.md', 'Proxy'],
-                        ['Reflect.md', 'Reflect'],
-                        ['Set和Map数据结构.md', 'Set和Map'],
-                        ['Symbol.md', 'Symbol'],
-                        ['module语法.md', 'module语法'],
-                    ]
-                },
-                {
-                    title: 'Vue.js',
-                    collapsable: true, // false为默认展开菜单, 默认值true是折叠,
-                    children: [
-                        ['外部点击事件.md', '外部点击事件'],
-                        ['组件通信方法.md', '组件通信高级方法'],
-                    ]
-                }, {
-                    title: 'React.js',
-                    collapsable: true,
-                    children: [
-                        [
-                            'Redux.md', 'Redux'
-                        ],
-                    ]
-                }, {
-                    title: '技术总结',
-                    collapsable: true, // false为默认展开菜单, 默认值true是折叠,
-                    children: [
-                        ['blobDownload.md', '二进制流文件下载（兼容IE）'],
-                    ]
-                }, {
-                    title: '通用方法封装',
-                    collapsable: true, // false为默认展开菜单, 默认值true是折叠,
-                    children: [
-                        ['tool.md', '通用方法封装'],
-                    ]
-                },
+                title: 'ES6', // 一级菜单名称
+                collapsable: true, // false为默认展开菜单, 默认值true是折叠,
+                children: [
+                    ['解构赋值.md', '解构赋值'], //菜单名称为'子菜单1'，跳转至/pages/folder1/test1.md
+                    ['数值的扩展.md', '数值的扩展'],
+                    ['数组的扩展.md', '数组的扩展'],
+                    ['对象的扩展.md', '对象的扩展'],
+                    ['对象的新增方法.md', '对象的新增方法'],
+                    ['函数的扩展.md', '函数的扩展'],
+                    ['字符串的扩展.md', '字符串的扩展'],
+                    ['字符串的新增方法.md', '字符串的新增方法'],
+                    ['async.md', 'async'],
+                    ['Promise.md', 'Promise'],
+                    ['Proxy.md', 'Proxy'],
+                    ['Reflect.md', 'Reflect'],
+                    ['Set和Map数据结构.md', 'Set和Map'],
+                    ['Symbol.md', 'Symbol'],
+                    ['module语法.md', 'module语法'],
+                ]
+            },
+            {
+                title: 'Vue.js',
+                collapsable: true, // false为默认展开菜单, 默认值true是折叠,
+                children: [
+                    ['外部点击事件.md', '外部点击事件'],
+                    ['组件通信方法.md', '组件通信高级方法'],
+                ]
+            }, {
+                title: 'React.js',
+                collapsable: true,
+                children: [
+                    [
+                        'Redux.md', 'Redux'
+                    ],
+                ]
+            }, {
+                title: 'React-Native',
+                collapsable: true,
+                children: [
+                    [
+                        'React-Native-01.md', 'macOS搭建React-Native开发环境'
+                    ],
+                ]
+            }, {
+                title: '技术总结',
+                collapsable: true, // false为默认展开菜单, 默认值true是折叠,
+                children: [
+                    ['blobDownload.md', '二进制流文件下载（兼容IE）'],
+                ]
+            }, {
+                title: '通用方法封装',
+                collapsable: true, // false为默认展开菜单, 默认值true是折叠,
+                children: [
+                    ['tool.md', '通用方法封装'],
+                ]
+            },
             ],
 
             //...可添加多个不同的侧边栏，不同页面会根据路径显示不同的侧边栏
