@@ -92,6 +92,9 @@ module.exports = {
                 collapsable: true,
                 children: [
                     [
+                        'react-01.md','React项目创建与配置'
+                    ],
+                    [
                         'Redux.md', 'Redux'
                     ],
                 ]
