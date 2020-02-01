@@ -243,7 +243,20 @@ export const changeStoreWord = (value) => (
 export const CHANGE_WORD = 'demo/CHANGE_WORD';
 ``` 
 
-4. ```App.js```文件配置  
+4. 完善```store/reducer.js```文件  
+```js
+import {combineReducers} from 'redux-immutable'
+import {
+    reducer as demoReducer
+}
+from '../pages/demo/store'
+
+export default combineReducers({
+    demo:demoReducer,
+})
+```
+
+5. ```App.js```文件配置  
 ```js
 import React from 'react';
 import {GlobalStyled} from './style'
@@ -272,7 +285,7 @@ export default App;
 
 ```
 
-5. 项目运行  
+6. 项目运行  
 ```js
 npm start
 ```
@@ -282,7 +295,7 @@ npm start
 
 
 ## 总结  
-使用上面的步骤就能够搭建一个通用的大型项目，懒得一步步配置的可以直接克隆[github](https://github.com/qixiaobro/react-app-template)仓库模版各种库的使用参考demo页面的代码，也可以去各官网了解每个库的作用以及使用。我也将会在后续针对各个库写一些总结。
+使用上面的步骤就能够搭建一个通用的大型项目，懒得一步步配置的可以直接克隆[github](https://github.com/qixiaobro/react-app-template)仓库模版，各种库的使用参考demo页面的代码，也可以去各官网了解每个库的作用以及使用。我也将会在后续针对各个库写一些总结。
 
 
 
