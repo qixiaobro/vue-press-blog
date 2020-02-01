@@ -1,3 +1,13 @@
+# react项目创建与配置模版  
+## 技术栈与库：
+* [react](https://zh-hans.reactjs.org/)
+* [redux](https://www.redux.org.cn/)
+* [react-redux](https://react-redux.js.org/introduction/quick-start)
+* [redux-thunk](https://github.com/reduxjs/redux-thunk)
+* [styled-components](https://styled-components.com/)
+* [Immutable.JS](https://cn.redux.js.org/docs/recipes/UsingImmutableJS.html)
+* [react-router](https://reacttraining.com/react-router/web/guides/quick-start)
+* [redux-immutable](https://github.com/gajus/redux-immutable)
 ## 创建项目
 
 1. 使用以下代码创建项目
