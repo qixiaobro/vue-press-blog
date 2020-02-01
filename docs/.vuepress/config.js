@@ -1,6 +1,9 @@
 module.exports = {
     title: 'QiXiao', // 显示在左上角的网页名称以及首页在浏览器标签显示的title名称
     description: 'QiXiao', // meta 中的描述文字，用于SEO
+    markdown: {
+        lineNumbers: true
+      },
     // 注入到当前页面的 HTML <head> 中的标签
     head: [
         ['link',
@@ -90,6 +93,7 @@ module.exports = {
             }, {
                 title: 'React.js',
                 collapsable: true,
+                sidebarDepth: 2,
                 children: [
                     [
                         'react-01.md','React项目创建与配置'
