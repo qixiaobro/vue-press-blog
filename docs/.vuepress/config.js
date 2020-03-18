@@ -115,6 +115,10 @@ module.exports = {
                 collapsable: true, // false为默认展开菜单, 默认值true是折叠,
                 children: [
                     ['blobDownload.md', '二进制流文件下载（兼容IE）'],
+                    ['javascript执行机制.md', 'javascript执行机制'],
+                    ['Promise及实现Promise.md', 'Promise及实现Promise'],
+
+
                 ]
             }, {
                 title: '通用方法封装',
