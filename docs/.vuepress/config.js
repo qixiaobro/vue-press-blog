@@ -117,6 +117,7 @@ module.exports = {
                     ['blobDownload.md', '二进制流文件下载（兼容IE）'],
                     ['javascript执行机制.md', 'javascript执行机制'],
                     ['Promise及实现Promise.md', 'Promise及实现Promise'],
+                    ['xhr_ajax.md', 'XMLHttpRequest及实现ajax'],
 
 
                 ]
