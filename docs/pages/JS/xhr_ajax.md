@@ -155,77 +155,69 @@ ajax({
 //原生方式
 function ajax(option) {
     var xhr = null;
-
-    //判断是否有XMLHttpRequest对象
     if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest()
     } else if (window.ActiveXObject) {
-        xhr = new ActiveXObject('Microsoft.XMLHttp')
+        xhr = new ActiveXObject('Microsoft.XMLhttp')
     }
 
-    //提取option数据
-    var url = option.url  //请求url
-    var data = option.data //请求参数
-    var method = option.method //请求方法
-    var async = option.async    //是否异步
+    var url = opption.url;
+    var method = option.method;
+    var data = option.data;
+    var async = option.async;
+    var timeout = option.timeout ? option.timeout : 0
 
-    //设置超时时间
-    xhr.timeout = (option.timeout && option.timeout > 0) ? option.timeout : 0
+    var paramArr = [];
+    var encodeData;
+    if (data instanceof Object) {
+        for (var key in data) {
+            paramArr.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+        }
+        encodeData = paramArr.join("&")
+    }
 
-    //设置监听函数
+    if (method === 'get') {
+        var index = url.indexOf('?')
+        if (index === -1) {
+            url += '?'
+        } else if (index !== (url.length - 1)) {
+            url += '&'
+        }
+        url += encodeData
+    }
+
+    xhr.open(url,method,async)
+
+    xhr.timeout = async&&timeout?timeout:0
+
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status > 200 && xhr.status < 300 || xhr.status == 304) {
-                option.success(xhr.responeText)
+        if (xhr.readyState > 200 && xhr.readyState < 300 || xhr.readyState == 304) {
+            if (xhr.status == 200) {
+                option.success(xhr.responseText)
             } else {
-                option.error("获取数据失败，错误代号为：" + xhr.status + "错误信息为：" + xhr.statusText);
+                option.error("获取数据失败:" + xhr.status + "错误信息为:" + xhr.statusText)
             }
             option.finally()
         }
     }
 
-    //设置超时监听
-    xhr.ontimeout = function () {
-        option.error('请求超时，请重试！');
-        option.finally()
-    }
-
     xhr.onerror = function (err) {
-        option.error(err);
+        option.error(err)
         option.finally()
     }
 
-    var paramArr = []//参数数组
-    var encodeData//转码参数
-    if (data instanceof Object) {
-        for (var key in data) {
-            // 参数拼接需要通过 encodeURIComponent 进行编码
-            paramArr.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
-        }
-        encodeData = paramArr.join('&')
+    xhr.ontimeout = function () {
+        option.error('请求超时')
+        option.finally()
     }
 
-    if (method === 'get') {
-        // 检测 url 中是否已存在 ? 及其位置
-        var index = url.indexOf('?')
-        if (index === -1) {
-            url += '?'
-        }else if (index !== url.length - 1) {
-            url += '&'
-        }
-        // 拼接 url
-        url += encodeData
-    }
-
-    xhr.open(method, url, async)
-
-    if (method === 'get') {
+    if(method==='get'){
         xhr.send(null)
-    } else {
-        // post 方式需要设置请求头
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;charset=UTF-8')
+    }else{
+        xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset:utf-8')
         xhr.send(encodeData)
     }
+
 
 
 }
