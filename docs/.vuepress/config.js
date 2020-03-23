@@ -118,8 +118,7 @@ module.exports = {
                     ['javascript执行机制.md', 'javascript执行机制'],
                     ['Promise及实现Promise.md', 'Promise及实现Promise'],
                     ['xhr_ajax.md', 'XMLHttpRequest及实现ajax'],
-
-
+                    ['idle.md', '杂'],
                 ]
             }, {
                 title: '通用方法封装',

@@ -30,3 +30,307 @@ syn：同步位          seq：初始序号   ACK：确认报文段   ack：确�
 * 客户端 -- ACK --> 服务端，CLOSED
 
 ![四次挥手](../../assets/Snipaste_2020-03-23_14-57-02.jpg)
+
+## 3.手写call、apply及bind函数
+
+### `call`
+
+```js
+   Function.prototype.myCall = function(context){
+    if(typeof this !== 'function'){ 
+     throw new TypeError('Error')
+    }
+
+    context = context || window //context是可选参数，默认为上下文
+    context.fn = this	//给context创建一个fn属性，并将值设置为需要调用的函数
+    const args = [...arguments].slice(1)  //call的参数是一个列表，所以需要剥离参
+    const result = context.fn(...args)//调用函数
+    delete context.fn //将对象上的函数删除
+    return result
+   }
+```
+
+### `apply`
+
+```js
+	Function.prototype.myApply = function(context){
+    if(typeof this !== 'function'){
+      throw new TypeError('Error')
+		}
+    
+    context = context || window
+ 		context.fn = this
+    
+    //处理参数和call有所区别,apply的参数是一个数组
+    let result
+    if(arguments[1]){
+      result = context.fn(...arguments[1])
+    }else{
+      result = context.fn()
+    }
+    
+    delete context.fn
+    return result
+  }
+```
+
+### `bind`
+
+```js
+	Function.prototype.myBind = function(context){
+    //bind() 方法创建一个新的函数，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，
+    //而其余参数将作为新函数的参数，供调用时使用。
+    if(typeof this !== 'function'){
+     throw new TypeError('Error')
+    }
+
+    const that = this;
+    const args = [...arguments].slice(1)
+
+    //返回一个函数
+    return function F(){
+     //因为返回一个函数，我们可以new F(),所以需要判断
+     if(this instanceof F){
+      return new that(...args,...arguments)
+     }
+     return that.apply(context,args.concat(...arguments))
+    }
+   }
+//bind 返回了一个函数，对于函数来说有两种方式调用，一种是直接调用，一种是通过 new 的方式，我们先来说直接调用的方式
+//对于直接调用来说，这里选择了 apply 的方式实现，但是对于参数需要注意以下情况：因为 bind 可以实现类似这样的代码 f.bind(obj, 1)(2)，所以我们需要将两边的参数拼接起来，于是就有了这样的实现 args.concat(...arguments)
+//最后来说通过 new 的方式，在之前的章节中我们学习过如何判断 this，对于 new 的情况来说，不会被任何方式改变 this，所以对于这种情况我们需要忽略传入的 this
+```
+
+## 4.`new`
+
+`new` 的原理:
+
+1. 新生成了一个对象
+2. 链接到原型
+3. 绑定this
+4. 返回新对象
+
+```js
+//实现new
+function myNew(){
+  let obj = {}
+  let Con = [].shift.call(arguments)
+  let obj._proto_ = Con.prototype
+
+  let result = Con.apply(obj,arguments)
+  return result instanceof Object ? result:obj
+ }
+```
+
+
+
+## 5.`instacenof`和`typeof`
+
+### `instanceof`
+
+原理：通过判断对象的原型链中是不是能找到对应类型的`prototype`
+
+实现：
+
+```js
+ function myInstanceof(left, right) {
+  let prototype = right.prototype;
+  left = left.prototype;
+  while (true) {
+   if (left = null || left === undefined) {
+    return false
+   }
+   if (prototype === left) {
+    return true
+   }
+   left = left.prototype
+  }
+ }
+```
+
+### `typeof`
+
+原理：JavaScript在底层存储变量的时候，会在变量的机器码的低位1-3位存储其类型信息。
+
+- 000:对象
+
+- 010:浮点数
+
+- 100:字符串
+
+- 110:布尔
+
+- 1:整数
+
+  特例`null`的机器码都是0，所以会被当为对象。`undefined`的机器码用-2^30整数来表示。
+
+重点记忆：
+
+```js
+// 数值
+typeof 37 === 'number';
+typeof 3.14 === 'number';
+typeof(42) === 'number';
+typeof Math.LN2 === 'number';
+typeof Infinity === 'number';
+typeof NaN === 'number'; // 尽管它是 "Not-A-Number" (非数值) 的缩写
+typeof Number(1) === 'number'; // Number 会尝试把参数解析成数值
+typeof 42n === 'bigint';
+
+
+// 字符串
+typeof '' === 'string';
+typeof 'bla' === 'string';
+typeof `template literal` === 'string';
+typeof '1' === 'string'; // 注意内容为数字的字符串仍是字符串
+typeof (typeof 1) === 'string'; // typeof 总是返回一个字符串
+typeof String(1) === 'string'; // String 将任意值转换为字符串，比 toString 更安全
+
+
+// 布尔值
+typeof true === 'boolean';
+typeof false === 'boolean';
+typeof Boolean(1) === 'boolean'; // Boolean() 会基于参数是真值还是虚值进行转换
+typeof !!(1) === 'boolean'; // 两次调用 ! (逻辑非) 操作符相当于 Boolean()
+
+
+// Symbols
+typeof Symbol() === 'symbol';
+typeof Symbol('foo') === 'symbol';
+typeof Symbol.iterator === 'symbol';
+
+
+// Undefined
+typeof undefined === 'undefined';
+typeof declaredButUndefinedVariable === 'undefined';
+typeof undeclaredVariable === 'undefined'; 
+
+
+// 对象
+typeof {a: 1} === 'object';
+
+// 使用 Array.isArray 或者 Object.prototype.toString.call
+// 区分数组和普通对象
+typeof [1, 2, 4] === 'object';
+
+typeof new Date() === 'object';
+typeof /regex/ === 'object'; // 历史结果请参阅正则表达式部分
+
+
+// 下面的例子令人迷惑，非常危险，没有用处。避免使用它们。
+typeof new Boolean(true) === 'object';
+typeof new Number(1) === 'object';
+typeof new String('abc') === 'object';
+
+// 函数
+typeof function() {} === 'function';
+typeof class C {} === 'function'
+typeof Math.sin === 'function';
+
+// 除 Function 外的所有构造函数的类型都是 'object'
+var str = new String('String');
+var num = new Number(100);
+
+typeof str; // 返回 'object'
+typeof num; // 返回 'object'
+
+var func = new Function();
+typeof func; // 返回 'function'
+
+// 括号有无将决定表达式的类型。
+var iData = 99;
+
+typeof iData + ' Wisen'; // 'number Wisen'
+typeof (iData + ' Wisen'); // 'string'
+
+//对正则表达式的判断有些浏览器不符合标准
+typeof /s/ === 'function'; // Chrome 1-12 , 不符合 ECMAScript 5.1
+typeof /s/ === 'object'; // Firefox 5+ , 符合 ECMAScript 5.1
+
+//抛出错误
+//在 ECMAScript 2015 之前，typeof 总能保证对任何所给的操作数返回一个字符串。即便是没有声明的标识符，typeof 也能返回 'undefined'。使用 typeof 永远不会抛出错误。
+//但在加入了块级作用域的 let 和 const 之后，在其被声明之前对块中的 let 和 const 变量使用 typeof 会抛出一个 ReferenceError。块作用域变量在块的头部处于“暂存死区”，直至其被初始化，在这期间，访问变量将会引发错误。
+
+typeof undeclaredVariable === 'undefined';
+
+typeof newLetVariable; // ReferenceError
+typeof newConstVariable; // ReferenceError
+typeof newClass; // ReferenceError
+
+let newLetVariable;
+const newConstVariable = 'hello';
+class newClass{};
+
+//例外 当前所有的浏览器都暴露了一个类型为 undefined 的非标准宿主对象 document.all。
+typeof document.all === 'undefined';
+```
+
+### 判断类型终极解决办法
+
+`Object.prototype.toString.call`:该方法本质就是依托`Object.prototype.toString()`方法得到对象内部属性 `[[Class]]` 传入原始类型却能够判定出结果是因为对值进行了包装 `null` 和 `undefined` 能够输出结果是内部实现有做处理
+
+方法封装：
+
+```js
+var type = function(data) {
+      var toString = Object.prototype.toString;
+      var dataType = toString
+              .call(data)
+              .replace(/\[object\s(.+)\]/, "$1")
+              .toLowerCase()
+      return dataType
+};
+
+//type(null) "null"
+//type('a')  "string"
+//type(undefined) "undefined"
+```
+
+## 6.V8 下的垃圾回收机制是怎么样的？	
+
+V8 实现了准确式 GC，GC 算法采用了分代式垃圾回收机制。因此，V8 将内存（堆）分为新生代和老生代两部分。
+
+### 新生代算法
+
+新生代中的对象一般存活时间较短，使用 Scavenge GC 算法。
+
+在新生代空间中，内存空间分为两部分，分别为 From 空间和 To 空间。在这两个空间中，必定有一个空间是使用的，另一个空间是空闲的。新分配的对象会被放入 From 空间中，当 From 空间被占满时，新生代 GC 就会启动了。算法会检查 From 空间中存活的对象并复制到 To 空间中，如果有失活的对象就会销毁。当复制完成后将 From 空间和 To 空间互换，这样 GC 就结束了。
+
+### 老生代算法
+
+老生代中的对象一般存活时间较长且数量也多，使用了两个算法，分别是标记清除算法和标记压缩算法。
+
+在讲算法前，先来说下什么情况下对象会出现在老生代空间中：
+
+- 新生代中的对象是否已经经历过一次 Scavenge 算法，如果经历过的话，会将对象从新生代空间移到老生代空间中。
+- To 空间的对象占比大小超过 25 %。在这种情况下，为了不影响到内存分配，会将对象从新生代空间移到老生代空间中。
+
+老生代中的空间很复杂，有如下几个空间
+
+```js
+enum AllocationSpace {
+  // TODO(v8:7464): Actually map this space's memory as read-only.
+  RO_SPACE,    // 不变的对象空间
+  NEW_SPACE,   // 新生代用于 GC 复制算法的空间
+  OLD_SPACE,   // 老生代常驻对象空间
+  CODE_SPACE,  // 老生代代码对象空间
+  MAP_SPACE,   // 老生代 map 对象
+  LO_SPACE,    // 老生代大空间对象
+  NEW_LO_SPACE,  // 新生代大空间对象
+
+  FIRST_SPACE = RO_SPACE,
+  LAST_SPACE = NEW_LO_SPACE,
+  FIRST_GROWABLE_PAGED_SPACE = OLD_SPACE,
+  LAST_GROWABLE_PAGED_SPACE = MAP_SPACE
+};
+```
+
+在老生代中，以下情况会先启动标记清除算法：
+
+- 某一个空间没有分块的时候
+- 空间中被对象超过一定限制
+- 空间不能保证新生代中的对象移动到老生代中
+
+在这个阶段中，会遍历堆中所有的对象，然后标记活的对象，在标记完成后，销毁所有没有被标记的对象。在标记大型对内存时，可能需要几百毫秒才能完成一次标记。这就会导致一些性能上的问题。为了解决这个问题，2011 年，V8 从 stop-the-world 标记切换到增量标志。在增量标记期间，GC 将标记工作分解为更小的模块，可以让 JS 应用逻辑在模块间隙执行一会，从而不至于让应用出现停顿情况。但在 2018 年，GC 技术又有了一个重大突破，这项技术名为并发标记。该技术可以让 GC 扫描和标记对象时，同时允许 JS 运行，你可以点击 [该博客](https://v8project.blogspot.com/2018/06/concurrent-marking.html) 详细阅读。
+
+清除对象后会造成堆内存出现碎片的情况，当碎片超过一定限制后会启动压缩算法。在压缩过程中，将活的对象像一端移动，直到所有对象都移动完成然后清理掉不需要的内存。
