@@ -26,7 +26,7 @@
 
 			1. pending
    			2. resolved
-   			3. rejected
+      			3. rejected
 
 ```javascript
 new Promise((resolve, reject) => {
