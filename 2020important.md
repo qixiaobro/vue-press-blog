@@ -9,7 +9,7 @@
 * [ ] 时间  时间戳
 * [ ] 正则表达式
 * [ ] http
-* [ ] instanceof typedof
+* [x] instanceof typedof
 * [ ] 箭头函数指向
 * [ ] 继承与原型链
 * [ ] vue源码   双向绑定、diff算法、观察者模式、生命周期

@@ -471,3 +471,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
 2. 执行 `flushCallbacks` 函数时为什么需要备份回调函数队列？执行的也是备份的回调函数队列？
 
    因为，会出现这么一种情况：`nextTick` 的回调函数中还使用 `nextTick`。如果 `flushCallbacks` 不做特殊处理，直接循环执行回调函数，会导致里面`nextTick` 中的回调函数会进入回调队列。
+
+## 8.`this`指向
+
+![](../../assets/Snipaste_2020-03-24_21-26-09.jpg)
